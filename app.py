@@ -53,13 +53,27 @@ try:
 except:
     lottie_stylist = None
 
-# Additional animations for sidebar
+# Additional animations for sidebar and main content
 try:
     lottie_fashion_show = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_1a1lwb.json")
     if lottie_fashion_show is None:
         lottie_fashion_show = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_5k2j2v.json")
 except:
     lottie_fashion_show = None
+
+try:
+    lottie_shopping = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_3rkla.json")
+    if lottie_shopping is None:
+        lottie_shopping = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_j2z4wq.json")
+except:
+    lottie_shopping = None
+
+try:
+    lottie_closet = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_6mhwlk.json")
+    if lottie_closet is None:
+        lottie_closet = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_1jzlf.json")
+except:
+    lottie_closet = None
 
 # API URL (will be replaced by ngrok URL)
 api_url = os.getenv("BACKEND_URL", "http://localhost:8000/recommend")
@@ -633,24 +647,6 @@ st.markdown("""
         font-weight: 300;
     }
     
-    /* Demo mode notification */
-    .demo-notification {
-        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-        padding: 15px 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-    
-    .demo-text {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1rem;
-        margin: 0;
-        color: #8B4513;
-        font-weight: 500;
-    }
-    
     /* Sidebar animation container */
     .sidebar-animation {
         margin: 20px 0;
@@ -677,6 +673,44 @@ st.markdown("""
     @keyframes shimmer {
         0% { background-position: -200px 0; }
         100% { background-position: calc(200px + 100%) 0; }
+    }
+    
+    /* Main content animation containers */
+    .main-animation {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0;
+    }
+    
+    .main-animation-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        margin: 10px 0;
+        color: #667eea;
+        text-align: center;
+        font-weight: 600;
+    }
+    
+    /* Floating animation for cards */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Pulse animation for buttons */
+    @keyframes pulse-button {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse-animation {
+        animation: pulse-button 2s infinite;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -708,6 +742,46 @@ else:
         <p>✨ Your Personal Fashion Assistant ✨</p>
     </div>
     """, unsafe_allow_html=True)
+
+# Add shopping animation in main content
+st.markdown('<div class="main-animation float-animation">', unsafe_allow_html=True)
+st.markdown('<p class="main-animation-title">Discover Your Style</p>', unsafe_allow_html=True)
+if lottie_shopping:
+    try:
+        st_lottie(lottie_shopping, height=150, key="shopping")
+    except:
+        st.markdown("""
+        <div style="text-align: center; padding: 10px;">
+            <p>🛍️ Discover Your Style 🛍️</p>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <div style="text-align: center; padding: 10px;">
+        <p>🛍️ Discover Your Style 🛍️</p>
+    </div>
+    """, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Add closet animation in main content
+st.markdown('<div class="main-animation float-animation" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
+st.markdown('<p class="main-animation-title">Organize Your Wardrobe</p>', unsafe_allow_html=True)
+if lottie_closet:
+    try:
+        st_lottie(lottie_closet, height=150, key="closet")
+    except:
+        st.markdown("""
+        <div style="text-align: center; padding: 10px;">
+            <p>🚪 Organize Your Wardrobe 🚪</p>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <div style="text-align: center; padding: 10px;">
+        <p>🚪 Organize Your Wardrobe 🚪</p>
+    </div>
+    """, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -770,7 +844,7 @@ with st.sidebar:
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Button to get recommendations
-if st.sidebar.button("Get Recommendations"):
+if st.sidebar.button("Get Recommendations", key="get_recommendations"):
     # Show loading animation
     loading_container = st.empty()
     with loading_container.container():
@@ -816,10 +890,10 @@ if st.sidebar.button("Get Recommendations"):
                 <style>
                     @keyframes pulse {
                         0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-                        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
-                        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-                    }
-                </style>
+                            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+                            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+                        }
+                    </style>
             </div>
             """, unsafe_allow_html=True)
     
@@ -892,60 +966,51 @@ if st.sidebar.button("Get Recommendations"):
             
             # Display outfit items in a grid
             st.markdown('<div class="outfit-grid">', unsafe_allow_html=True)
-            for item in rec["outfit"]:
-                st.markdown("""
-                <div class="outfit-card">
+            for idx, item in enumerate(rec["outfit"]):
+                # Add float animation with delay for each card
+                animation_delay = idx * 0.2
+                st.markdown(f"""
+                <div class="outfit-card float-animation" style="animation-delay: {animation_delay}s;">
                     <div class="outfit-card-header">
-                        <h3 class="outfit-card-title">{}</h3>
+                        <h3 class="outfit-card-title">{item['name']}</h3>
                     </div>
                     <div class="outfit-card-body">
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Category:</span>
-                            <span class="outfit-detail-value">{}</span>
+                            <span class="outfit-detail-value">{item['category']}</span>
                         </div>
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Color:</span>
-                            <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {}"></span>{}</span>
+                            <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {item['color_hex']}"></span>{item['color']}</span>
                         </div>
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Brand:</span>
-                            <span class="outfit-detail-value">{}</span>
+                            <span class="outfit-detail-value">{item['brand']}</span>
                         </div>
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Price:</span>
-                            <span class="outfit-detail-value">${}</span>
+                            <span class="outfit-detail-value">${item['price']}</span>
                         </div>
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Material:</span>
-                            <span class="outfit-detail-value">{}</span>
+                            <span class="outfit-detail-value">{item['material']}</span>
                         </div>
                         <div class="outfit-detail">
                             <span class="outfit-detail-label">Care:</span>
-                            <span class="outfit-detail-value">{}</span>
+                            <span class="outfit-detail-value">{item['care_instructions']}</span>
                         </div>
                         <div class="outfit-reason">
-                            <strong>Why it works:</strong> {}
+                            <strong>Why it works:</strong> {item['reason']}
                         </div>
                     </div>
-                    <div class="outfit-score">{:.2f}</div>
+                    <div class="outfit-score">{item['compatibility_score']:.2f}</div>
                 </div>
-                """.format(
-                    item['name'], 
-                    item['category'],
-                    item['color_hex'], 
-                    item['color'],
-                    item['brand'],
-                    item['price'],
-                    item['material'],
-                    item['care_instructions'],
-                    item['reason'],
-                    item['compatibility_score']
-                ), unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # Display total price
+            # Display total price with pulse animation
             st.markdown("""
-            <div class="total-price-container">
+            <div class="total-price-container pulse-animation">
                 <p class="total-price-label">Total Price</p>
                 <p class="total-price-value">${}</p>
             </div>
@@ -1002,14 +1067,7 @@ if st.sidebar.button("Get Recommendations"):
         # Clear loading animation
         loading_container.empty()
         
-        # Show demo mode notification
-        st.markdown("""
-        <div class="demo-notification">
-            <p class="demo-text">📱 Demo Mode: Backend service not available. Showing sample recommendations.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Use mock response
+        # Use mock response (removed blue demo mode notification)
         rec = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
         
         # Show success animation
@@ -1063,60 +1121,51 @@ if st.sidebar.button("Get Recommendations"):
         
         # Display outfit items in a grid
         st.markdown('<div class="outfit-grid">', unsafe_allow_html=True)
-        for item in rec["outfit"]:
-            st.markdown("""
-            <div class="outfit-card">
+        for idx, item in enumerate(rec["outfit"]):
+            # Add float animation with delay for each card
+            animation_delay = idx * 0.2
+            st.markdown(f"""
+            <div class="outfit-card float-animation" style="animation-delay: {animation_delay}s;">
                 <div class="outfit-card-header">
-                    <h3 class="outfit-card-title">{}</h3>
+                    <h3 class="outfit-card-title">{item['name']}</h3>
                 </div>
                 <div class="outfit-card-body">
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Category:</span>
-                        <span class="outfit-detail-value">{}</span>
+                        <span class="outfit-detail-value">{item['category']}</span>
                     </div>
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Color:</span>
-                        <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {}"></span>{}</span>
+                        <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {item['color_hex']}"></span>{item['color']}</span>
                     </div>
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Brand:</span>
-                        <span class="outfit-detail-value">{}</span>
+                        <span class="outfit-detail-value">{item['brand']}</span>
                     </div>
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Price:</span>
-                        <span class="outfit-detail-value">${}</span>
+                        <span class="outfit-detail-value">${item['price']}</span>
                     </div>
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Material:</span>
-                        <span class="outfit-detail-value">{}</span>
+                        <span class="outfit-detail-value">{item['material']}</span>
                     </div>
                     <div class="outfit-detail">
                         <span class="outfit-detail-label">Care:</span>
-                        <span class="outfit-detail-value">{}</span>
+                        <span class="outfit-detail-value">{item['care_instructions']}</span>
                     </div>
                     <div class="outfit-reason">
-                        <strong>Why it works:</strong> {}
+                        <strong>Why it works:</strong> {item['reason']}
                     </div>
                 </div>
-                <div class="outfit-score">{:.2f}</div>
+                <div class="outfit-score">{item['compatibility_score']:.2f}</div>
             </div>
-            """.format(
-                item['name'], 
-                item['category'],
-                item['color_hex'], 
-                item['color'],
-                item['brand'],
-                item['price'],
-                item['material'],
-                item['care_instructions'],
-                item['reason'],
-                item['compatibility_score']
-            ), unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Display total price
+        # Display total price with pulse animation
         st.markdown("""
-        <div class="total-price-container">
+        <div class="total-price-container pulse-animation">
             <p class="total-price-label">Total Price</p>
             <p class="total-price-value">${}</p>
         </div>
