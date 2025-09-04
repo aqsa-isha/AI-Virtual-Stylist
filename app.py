@@ -3,7 +3,6 @@ import requests
 import json
 import os
 import time
-from streamlit_lottie import st_lottie
 
 # Set page configuration
 st.set_page_config(
@@ -19,15 +18,40 @@ def load_lottieurl(url: str):
         r = requests.get(url)
         if r.status_code == 200:
             return r.json()
+        else:
+            return None
     except Exception as e:
         st.error(f"Error loading Lottie: {e}")
-    return None
+        return None
 
-# Load animations
-lottie_fashion = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_V9t630.json")
-lottie_loading = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_DMgKk2.json")
-lottie_success = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_l5z0rj.json")
-lottie_stylist = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_touohxv0.json")
+# Try to load animations, with fallbacks
+try:
+    lottie_fashion = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_V9t630.json")
+    if lottie_fashion is None:
+        lottie_fashion = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
+except:
+    lottie_fashion = None
+
+try:
+    lottie_loading = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_DMgKk2.json")
+    if lottie_loading is None:
+        lottie_loading = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_x62chj.json")
+except:
+    lottie_loading = None
+
+try:
+    lottie_success = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_l5z0rj.json")
+    if lottie_success is None:
+        lottie_success = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_gciiixj2.json")
+except:
+    lottie_success = None
+
+try:
+    lottie_stylist = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_touohxv0.json")
+    if lottie_stylist is None:
+        lottie_stylist = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json")
+except:
+    lottie_stylist = None
 
 # API URL (will be replaced by ngrok URL)
 api_url = os.getenv("BACKEND_URL", "http://localhost:8000/recommend")
@@ -458,8 +482,22 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Display fashion animation
-st_lottie(lottie_fashion, height=250, key="fashion")
+# Display fashion animation with fallback
+if lottie_fashion:
+    try:
+        st_lottie(lottie_fashion, height=250, key="fashion")
+    except:
+        st.markdown("""
+        <div style="text-align: center; padding: 20px; font-size: 1.2rem; color: #667eea;">
+            <p>✨ Your Personal Fashion Assistant ✨</p>
+        </div>
+        """, unsafe_allow_html=True)
+else:
+    st.markdown("""
+    <div style="text-align: center; padding: 20px; font-size: 1.2rem; color: #667eea;">
+        <p>✨ Your Personal Fashion Assistant ✨</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
@@ -475,24 +513,76 @@ with st.sidebar:
     budget = st.slider("Budget ($)", 20, 500, 150)
     exclude_colors = st.multiselect("Exclude Colors", ["black", "white", "blue", "red", "green", "yellow", "purple", "pink", "brown", "gray"])
     
-    # Display stylist animation
-    st_lottie(lottie_stylist, height=200, key="stylist")
+    # Display stylist animation with fallback
+    if lottie_stylist:
+        try:
+            st_lottie(lottie_stylist, height=200, key="stylist")
+        except:
+            st.markdown("""
+            <div style="text-align: center; padding: 20px;">
+                <p>👗 Your Personal Stylist 👗</p>
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style="text-align: center; padding: 20px;">
+            <p>👗 Your Personal Stylist 👗</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Button to get recommendations
 if st.sidebar.button("Get Recommendations"):
     # Show loading animation
     loading_container = st.empty()
     with loading_container.container():
-        st.markdown("""
-        <div class="loading-container">
-            <div style="width: 250px; height: 250px;">
-        """, unsafe_allow_html=True)
-        st_lottie(lottie_loading, height=250, key="loading")
-        st.markdown("""
+        if lottie_loading:
+            try:
+                st.markdown("""
+                <div class="loading-container">
+                    <div style="width: 250px; height: 250px;">
+                """, unsafe_allow_html=True)
+                st_lottie(lottie_loading, height=250, key="loading")
+                st.markdown("""
+                    </div>
+                    <p class="loading-text">Finding your perfect outfit...</p>
+                </div>
+                """, unsafe_allow_html=True)
+            except:
+                st.markdown("""
+                <div class="loading-container">
+                    <p class="loading-text">Finding your perfect outfit...</p>
+                    <div style="margin-top: 20px;">
+                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #667eea; animation: pulse 1.5s infinite;"></div>
+                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #764ba2; animation: pulse 1.5s infinite; animation-delay: 0.2s; margin-left: 5px;"></div>
+                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #f093fb; animation: pulse 1.5s infinite; animation-delay: 0.4s; margin-left: 5px;"></div>
+                    </div>
+                    <style>
+                        @keyframes pulse {
+                            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+                            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+                            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+                        }
+                    </style>
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="loading-container">
+                <p class="loading-text">Finding your perfect outfit...</p>
+                <div style="margin-top: 20px;">
+                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #667eea; animation: pulse 1.5s infinite;"></div>
+                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #764ba2; animation: pulse 1.5s infinite; animation-delay: 0.2s; margin-left: 5px;"></div>
+                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #f093fb; animation: pulse 1.5s infinite; animation-delay: 0.4s; margin-left: 5px;"></div>
+                </div>
+                <style>
+                    @keyframes pulse {
+                        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+                        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+                        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+                    }
+                </style>
             </div>
-            <p class="loading-text">Finding your perfect outfit...</p>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
     
     # Make API request
     payload = {
@@ -514,17 +604,33 @@ if st.sidebar.button("Get Recommendations"):
             
             # Show success animation
             success_container = st.empty()
-            with success_container.container():
-                st.markdown("""
-                <div class="success-container">
-                    <div style="width: 200px; height: 200px;">
-                """, unsafe_allow_html=True)
-                st_lottie(lottie_success, height=200, key="success")
-                st.markdown("""
+            if lottie_success:
+                try:
+                    with success_container.container():
+                        st.markdown("""
+                        <div class="success-container">
+                            <div style="width: 200px; height: 200px;">
+                        """, unsafe_allow_html=True)
+                        st_lottie(lottie_success, height=200, key="success")
+                        st.markdown("""
+                            </div>
+                            <p class="success-text">Perfect match found!</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                except:
+                    with success_container.container():
+                        st.markdown("""
+                        <div class="success-container">
+                            <p class="success-text">✨ Perfect match found! ✨</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+            else:
+                with success_container.container():
+                    st.markdown("""
+                    <div class="success-container">
+                        <p class="success-text">✨ Perfect match found! ✨</p>
                     </div>
-                    <p class="success-text">Perfect match found!</p>
-                </div>
-                """, unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
             
             # Wait a moment to show the success animation
             time.sleep(2)
