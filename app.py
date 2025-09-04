@@ -56,6 +56,162 @@ except:
 # API URL (will be replaced by ngrok URL)
 api_url = os.getenv("BACKEND_URL", "http://localhost:8000/recommend")
 
+# Function to create mock response when backend is not available
+def get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors):
+    # Create mock outfit items
+    mock_outfits = [
+        {
+            "id": 1,
+            "name": "Elegant Silk Blouse",
+            "category": "top",
+            "color": "blue",
+            "color_hex": "#1E88E5",
+            "style": "classic",
+            "reason": f"Perfect for your {body_shape} body shape. Matches your {personal_style} style and the {event_type} event.",
+            "brand": "Zara",
+            "price": 89,
+            "description": "Elegant silk blouse perfect for any occasion",
+            "material": "Silk",
+            "care_instructions": "Dry clean only",
+            "compatibility_score": 0.85
+        },
+        {
+            "id": 2,
+            "name": "Tailored Trousers",
+            "category": "bottom",
+            "color": "black",
+            "color_hex": "#000000",
+            "style": "classic",
+            "reason": f"These trousers complement your {body_shape} body shape and match your {personal_style} style.",
+            "brand": "H&M",
+            "price": 59,
+            "description": "Comfortable and stylish tailored trousers",
+            "material": "Polyester",
+            "care_instructions": "Machine wash cold",
+            "compatibility_score": 0.90
+        },
+        {
+            "id": 3,
+            "name": "Leather Handbag",
+            "category": "accessories",
+            "color": "brown",
+            "color_hex": "#6D4C41",
+            "style": "classic",
+            "reason": f"This accessory completes your {personal_style} look for the {event_type} event.",
+            "brand": "Mango",
+            "price": 75,
+            "description": "Elegant leather handbag with plenty of space",
+            "material": "Leather",
+            "care_instructions": "Wipe with damp cloth",
+            "compatibility_score": 0.80
+        }
+    ]
+    
+    # Calculate total price
+    total_price = sum(item["price"] for item in mock_outfits)
+    
+    # Calculate overall compatibility
+    overall_compatibility = sum(item["compatibility_score"] for item in mock_outfits) / len(mock_outfits)
+    
+    # Create message based on compatibility
+    if overall_compatibility > 0.8:
+        message = "Excellent match! This outfit is perfect for you and will make you look amazing."
+    elif overall_compatibility > 0.6:
+        message = "Great choice! This outfit suits you well and matches your preferences."
+    else:
+        message = "Good option! You might want to consider some accessories to complete the look."
+    
+    # Create mock body shape info
+    body_shape_info = {
+        "apple": {
+            "description": "Wider torso, narrower hips",
+            "tips": "Draw attention away from midsection"
+        },
+        "pear": {
+            "description": "Narrower torso, wider hips",
+            "tips": "Balance proportions with structured tops"
+        },
+        "hourglass": {
+            "description": "Balanced bust and hips with narrow waist",
+            "tips": "Highlight waist with fitted styles"
+        },
+        "rectangle": {
+            "description": "Similar width bust, waist, and hips",
+            "tips": "Create curves with strategic layering"
+        },
+        "inverted_triangle": {
+            "description": "Wider shoulders, narrower hips",
+            "tips": "Add volume to lower body"
+        }
+    }
+    
+    # Create mock style info
+    style_info = {
+        "casual": {
+            "description": "Comfortable, relaxed, everyday wear",
+            "colors": "earth tones, pastels, denim"
+        },
+        "formal": {
+            "description": "Professional, elegant attire",
+            "colors": "navy, black, gray, white"
+        },
+        "bohemian": {
+            "description": "Free-spirited, artistic, unconventional",
+            "colors": "warm tones, patterns, textured fabrics"
+        },
+        "sporty": {
+            "description": "Athletic, functional, active wear",
+            "colors": "brights, neutrals, performance fabrics"
+        },
+        "classic": {
+            "description": "Timeless, tailored, traditional",
+            "colors": "neutrals, jewel tones, clean lines"
+        },
+        "trendy": {
+            "description": "Fashion-forward, current styles",
+            "colors": "seasonal colors, bold patterns, statement pieces"
+        }
+    }
+    
+    # Create mock event info
+    event_info = {
+        "work": {
+            "dress_code": "Business casual to formal",
+            "formality": "medium"
+        },
+        "party": {
+            "dress_code": "Cocktail to festive",
+            "formality": "high"
+        },
+        "date": {
+            "dress_code": "Smart casual to dressy",
+            "formality": "medium"
+        },
+        "casual outing": {
+            "dress_code": "Relaxed and comfortable",
+            "formality": "low"
+        },
+        "wedding": {
+            "dress_code": "Formal to black tie",
+            "formality": "very high"
+        },
+        "interview": {
+            "dress_code": "Professional and conservative",
+            "formality": "high"
+        }
+    }
+    
+    # Return mock response in the same format as the API
+    return {
+        "outfit": mock_outfits,
+        "overall_compatibility": overall_compatibility,
+        "message": message,
+        "body_shape_info": body_shape_info.get(body_shape, body_shape_info["hourglass"]),
+        "style_info": style_info.get(personal_style, style_info["classic"]),
+        "event_info": event_info.get(event_type, event_info["work"]),
+        "total_price": total_price
+    }
+
 # Custom CSS for stunning UI
 st.markdown("""
 <style>
@@ -468,6 +624,24 @@ st.markdown("""
         font-size: 0.9rem;
         font-weight: 300;
     }
+    
+    /* Demo mode notification */
+    .demo-notification {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .demo-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        margin: 0;
+        color: #8B4513;
+        font-weight: 500;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -762,7 +936,171 @@ if st.sidebar.button("Get Recommendations"):
     except requests.exceptions.RequestException as e:
         # Clear loading animation
         loading_container.empty()
-        st.error(f"API request failed: {e}")
+        
+        # Show demo mode notification
+        st.markdown("""
+        <div class="demo-notification">
+            <p class="demo-text">📱 Demo Mode: Backend service not available. Showing sample recommendations.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Use mock response
+        rec = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
+        
+        # Show success animation
+        success_container = st.empty()
+        if lottie_success:
+            try:
+                with success_container.container():
+                    st.markdown("""
+                    <div class="success-container">
+                        <div style="width: 200px; height: 200px;">
+                    """, unsafe_allow_html=True)
+                    st_lottie(lottie_success, height=200, key="success")
+                    st.markdown("""
+                        </div>
+                        <p class="success-text">Perfect match found!</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+            except:
+                with success_container.container():
+                    st.markdown("""
+                    <div class="success-container">
+                        <p class="success-text">✨ Perfect match found! ✨</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+        else:
+            with success_container.container():
+                st.markdown("""
+                <div class="success-container">
+                    <p class="success-text">✨ Perfect match found! ✨</p>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Wait a moment to show the success animation
+        time.sleep(2)
+        success_container.empty()
+        
+        # Display recommendation header
+        st.markdown("""
+        <div class="recommendation-header">
+            <h2 class="recommendation-title">✨ Outfit Recommendation</h2>
+            <div class="compatibility-badge">Compatibility: {:.2f}</div>
+        </div>
+        """.format(rec['overall_compatibility']), unsafe_allow_html=True)
+        
+        # Display message
+        st.markdown("""
+        <div class="message-box">
+            <p class="message-text">{}</p>
+        </div>
+        """.format(rec['message']), unsafe_allow_html=True)
+        
+        # Display outfit items in a grid
+        st.markdown('<div class="outfit-grid">', unsafe_allow_html=True)
+        for item in rec["outfit"]:
+            st.markdown("""
+            <div class="outfit-card">
+                <div class="outfit-card-header">
+                    <h3 class="outfit-card-title">{}</h3>
+                </div>
+                <div class="outfit-card-body">
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Category:</span>
+                        <span class="outfit-detail-value">{}</span>
+                    </div>
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Color:</span>
+                        <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {}"></span>{}</span>
+                    </div>
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Brand:</span>
+                        <span class="outfit-detail-value">{}</span>
+                    </div>
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Price:</span>
+                        <span class="outfit-detail-value">${}</span>
+                    </div>
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Material:</span>
+                        <span class="outfit-detail-value">{}</span>
+                    </div>
+                    <div class="outfit-detail">
+                        <span class="outfit-detail-label">Care:</span>
+                        <span class="outfit-detail-value">{}</span>
+                    </div>
+                    <div class="outfit-reason">
+                        <strong>Why it works:</strong> {}
+                    </div>
+                </div>
+                <div class="outfit-score">{:.2f}</div>
+            </div>
+            """.format(
+                item['name'], 
+                item['category'],
+                item['color_hex'], 
+                item['color'],
+                item['brand'],
+                item['price'],
+                item['material'],
+                item['care_instructions'],
+                item['reason'],
+                item['compatibility_score']
+            ), unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Display total price
+        st.markdown("""
+        <div class="total-price-container">
+            <p class="total-price-label">Total Price</p>
+            <p class="total-price-value">${}</p>
+        </div>
+        """.format(rec['total_price']), unsafe_allow_html=True)
+        
+        # Display additional information
+        with st.expander("Style & Event Information", expanded=False):
+            st.markdown("""
+            <div class="info-section">
+                <h3 class="info-section-header">Style & Event Information</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4 class="info-card-title">Body Shape Info</h4>
+                        <ul class="info-card-list">
+                            <li>{}</li>
+                            <li><strong>Tip:</strong> {}</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4 class="info-card-title">Style Info</h4>
+                        <ul class="info-card-list">
+                            <li>{}</li>
+                            <li><strong>Colors:</strong> {}</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h4 class="info-card-title">Event Info</h4>
+                        <ul class="info-card-list">
+                            <li><strong>Dress code:</strong> {}</li>
+                            <li><strong>Formality:</strong> {}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            """.format(
+                rec['body_shape_info']['description'],
+                rec['body_shape_info']['tips'],
+                rec['style_info']['description'],
+                rec['style_info']['colors'],
+                rec['event_info']['dress_code'],
+                rec['event_info']['formality']
+            ), unsafe_allow_html=True)
+        
+        # Footer
+        st.markdown("""
+        <div class="footer">
+            <p>Style AI © 2023 | Powered by Advanced Fashion AI</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Close main container
 st.markdown('</div>', unsafe_allow_html=True)
