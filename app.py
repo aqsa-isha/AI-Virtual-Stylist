@@ -53,6 +53,14 @@ try:
 except:
     lottie_stylist = None
 
+# Additional animations for sidebar
+try:
+    lottie_fashion_show = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_1a1lwb.json")
+    if lottie_fashion_show is None:
+        lottie_fashion_show = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_5k2j2v.json")
+except:
+    lottie_fashion_show = None
+
 # API URL (will be replaced by ngrok URL)
 api_url = os.getenv("BACKEND_URL", "http://localhost:8000/recommend")
 
@@ -642,6 +650,34 @@ st.markdown("""
         color: #8B4513;
         font-weight: 500;
     }
+    
+    /* Sidebar animation container */
+    .sidebar-animation {
+        margin: 20px 0;
+        text-align: center;
+    }
+    
+    .sidebar-animation-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        margin: 10px 0;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+    }
+    
+    /* Animated divider */
+    .animated-divider {
+        height: 3px;
+        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0));
+        margin: 15px 0;
+        border-radius: 3px;
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200px 0; }
+        100% { background-position: calc(200px + 100%) 0; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -687,22 +723,51 @@ with st.sidebar:
     budget = st.slider("Budget ($)", 20, 500, 150)
     exclude_colors = st.multiselect("Exclude Colors", ["black", "white", "blue", "red", "green", "yellow", "purple", "pink", "brown", "gray"])
     
-    # Display stylist animation with fallback
-    if lottie_stylist:
+    # Add animated divider
+    st.markdown('<div class="animated-divider"></div>', unsafe_allow_html=True)
+    
+    # Display fashion show animation with title
+    st.markdown('<div class="sidebar-animation">', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-animation-title">Fashion Show</p>', unsafe_allow_html=True)
+    if lottie_fashion_show:
         try:
-            st_lottie(lottie_stylist, height=200, key="stylist")
+            st_lottie(lottie_fashion_show, height=150, key="fashion_show")
         except:
             st.markdown("""
-            <div style="text-align: center; padding: 20px;">
-                <p>👗 Your Personal Stylist 👗</p>
+            <div style="text-align: center; padding: 10px;">
+                <p>👗 Fashion Show 👗</p>
             </div>
             """, unsafe_allow_html=True)
     else:
         st.markdown("""
-        <div style="text-align: center; padding: 20px;">
-            <p>👗 Your Personal Stylist 👗</p>
+        <div style="text-align: center; padding: 10px;">
+            <p>👗 Fashion Show 👗</p>
         </div>
         """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Add animated divider
+    st.markdown('<div class="animated-divider"></div>', unsafe_allow_html=True)
+    
+    # Display stylist animation with title
+    st.markdown('<div class="sidebar-animation">', unsafe_allow_html=True)
+    st.markdown('<p class="sidebar-animation-title">Your Stylist</p>', unsafe_allow_html=True)
+    if lottie_stylist:
+        try:
+            st_lottie(lottie_stylist, height=150, key="stylist")
+        except:
+            st.markdown("""
+            <div style="text-align: center; padding: 10px;">
+                <p>👩‍🎨 Your Stylist 👩‍🎨</p>
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div style="text-align: center; padding: 10px;">
+            <p>👩‍🎨 Your Stylist 👩‍🎨</p>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Button to get recommendations
 if st.sidebar.button("Get Recommendations"):
@@ -924,10 +989,10 @@ if st.sidebar.button("Get Recommendations"):
                     rec['event_info']['formality']
                 ), unsafe_allow_html=True)
             
-            # Footer
+            # Footer - Updated year to 2025
             st.markdown("""
             <div class="footer">
-                <p>Style AI © 2023 | Powered by Advanced Fashion AI</p>
+                <p>Style AI © 2025 | Powered by Advanced Fashion AI</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -1095,10 +1160,10 @@ if st.sidebar.button("Get Recommendations"):
                 rec['event_info']['formality']
             ), unsafe_allow_html=True)
         
-        # Footer
+        # Footer - Updated year to 2025
         st.markdown("""
         <div class="footer">
-            <p>Style AI © 2023 | Powered by Advanced Fashion AI</p>
+            <p>Style AI © 2025 | Powered by Advanced Fashion AI</p>
         </div>
         """, unsafe_allow_html=True)
 
