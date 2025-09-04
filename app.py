@@ -234,7 +234,7 @@ def get_mock_response(body_shape, personal_style, event_type, budget, exclude_co
         "total_price": total_price
     }
 
-# Custom CSS for stunning UI
+# Custom CSS for stunning UI with no light blue elements
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Parisienne&family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -287,934 +287,377 @@ st.markdown("""
         width: 200%;
         height: 200%;
         background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-        transform: rotate(30deg);
+        z-index: 0;
     }
     
-    .header h1 {
-        font-size: 4.5rem;
-        margin: 0;
-        color: #fff;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    .header h1, .header p {
         position: relative;
         z-index: 1;
-    }
-    
-    .header p {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.3rem;
-        margin: 10px 0 0;
-        color: rgba(255,255,255,0.9);
-        position: relative;
-        z-index: 1;
-        font-weight: 300;
     }
     
     /* Sidebar */
-    .sidebar-content {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .sidebar .sidebar-content {
+        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
         border-radius: 20px;
-        padding: 25px;
-        color: white;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    
-    .sidebar-header {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 2rem;
-        margin-bottom: 25px;
-        text-align: center;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        padding: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
     
     /* Form elements */
-    .stSelectbox > div > div > select, .stSlider > div > div > div > div > div {
-        font-family: 'Montserrat', sans-serif;
-        background-color: rgba(255,255,255,0.9) !important;
-        color: #333 !important;
-        border-radius: 10px !important;
+    .stTextInput > div > div > input {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        padding: 10px 15px;
     }
     
-    .stMultiiselect > div > div > div > div > div {
-        font-family: 'Montserrat', sans-serif;
-        background-color: rgba(255,255,255,0.9) !important;
-        color: #333 !important;
-        border-radius: 10px !important;
+    .stSelectbox > div > div > select {
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        padding: 10px 15px;
     }
     
-    /* Button */
-    div[data-testid="stSidebar"] > div > div > button {
-        font-family: 'Montserrat', sans-serif;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    .stSlider > div > div > div > div {
+        background: #ff9a9e;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
         color: white;
         border: none;
-        border-radius: 50px;
-        padding: 12px 20px;
+        border-radius: 10px;
+        padding: 12px 24px;
         font-weight: 600;
         width: 100%;
-        margin-top: 20px;
-        font-size: 1.1rem;
         transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(245,87,108,0.4);
     }
     
-    div[data-testid="stSidebar"] > div > div > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(245,87,108,0.6);
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
     }
     
-    /* Loading animation container */
-    .loading-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 40px;
+    /* Recommendation cards */
+    .recommendation-card {
         background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin: 30px 0;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0;
     }
     
-    .loading-text {
-        font-family: 'Cormorant Garamond', serif;
-        margin-top: 20px;
-        font-size: 2rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 0.5px;
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
     
-    /* Success animation container */
-    .success-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        margin: 30px 0;
-    }
-    
-    .success-text {
-        font-family: 'Cormorant Garamond', serif;
-        margin-top: 20px;
-        font-size: 2rem;
-        font-weight: 600;
-        color: #4CAF50;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Recommendation header */
-    .recommendation-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 30px 0 20px;
-        padding: 0 10px;
-    }
-    
-    .recommendation-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 3rem;
-        margin: 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: 0.5px;
-    }
-    
-    .compatibility-badge {
-        font-family: 'Montserrat', sans-serif;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        color: white;
-        padding: 8px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 1.2rem;
-        box-shadow: 0 5px 15px rgba(245,87,108,0.4);
-    }
-    
-    /* Message box */
+    /* Message box - removed light blue background */
     .message-box {
         background: white;
-        padding: 20px;
         border-radius: 15px;
-        margin-bottom: 30px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        border-left: 5px solid #f5576c;
-    }
-    
-    .message-text {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1.2rem;
-        margin: 0;
-        color: #555;
-        font-weight: 300;
-        font-style: italic;
-    }
-    
-    /* Outfit grid */
-    .outfit-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 25px;
-        margin-bottom: 30px;
-    }
-    
-    /* Outfit card */
-    .outfit-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .outfit-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
-    
-    .outfit-card-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 15px 20px;
-        color: white;
-    }
-    
-    .outfit-card-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.6rem;
-        margin: 0;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    
-    .outfit-card-body {
         padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-left: 5px solid #ff9a9e;
     }
     
-    .outfit-detail {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
+    /* Total price container - removed light blue background */
+    .price-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        text-align: center;
     }
     
-    .outfit-detail-label {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600;
-        min-width: 100px;
-        color: #555;
+    .price-container h3 {
+        color: #333;
+        margin-bottom: 10px;
     }
     
-    .outfit-detail-value {
-        font-family: 'Montserrat', sans-serif;
-        flex-grow: 1;
+    .price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ff9a9e;
     }
     
-    .color-indicator {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        margin-right: 10px;
-        vertical-align: middle;
-        border: 1px solid #eee;
+    /* Info boxes */
+    .info-box {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
     
-    .outfit-reason {
-        font-family: 'Montserrat', sans-serif;
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 15px;
-        border-left: 4px solid #f5576c;
-        font-style: italic;
-        font-weight: 300;
-    }
-    
-    .outfit-score {
+    .info-box h3 {
+        color: #ff9a9e;
+        margin-bottom: 10px;
         font-family: 'Cormorant Garamond', serif;
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    /* Compatibility score */
+    .compatibility-score {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
         color: white;
-        width: 50px;
-        height: 50px;
         border-radius: 50%;
+        width: 80px;
+        height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 600;
-        font-size: 1.1rem;
-        box-shadow: 0 5px 15px rgba(245,87,108,0.4);
-    }
-    
-    /* Total price */
-    .total-price-container {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 25px;
-        border-radius: 20px;
-        text-align: center;
-        margin: 30px 0;
-        box-shadow: 0 10px 30px rgba(102,126,234,0.3);
-    }
-    
-    .total-price-label {
-        font-family: 'Montserrat', sans-serif;
-        color: rgba(255,255,255,0.9);
-        font-size: 1.2rem;
-        margin: 0 0 10px;
-        font-weight: 300;
-    }
-    
-    .total-price-value {
-        font-family: 'Cormorant Garamond', serif;
-        color: white;
-        font-size: 2.8rem;
-        font-weight: 600;
-        margin: 0;
-        letter-spacing: 0.5px;
-    }
-    
-    /* Info section */
-    .info-section {
-        background: white;
-        border-radius: 20px;
-        padding: 25px;
-        margin-top: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    }
-    
-    .info-section-header {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 2.2rem;
-        margin-top: 0;
-        margin-bottom: 20px;
-        color: #667eea;
-        text-align: center;
-        letter-spacing: 0.5px;
-    }
-    
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-    }
-    
-    .info-card {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 20px;
-        border-top: 4px solid #667eea;
-    }
-    
-    .info-card-title {
-        font-family: 'Cormorant Garamond', serif;
         font-size: 1.5rem;
-        margin-top: 0;
-        margin-bottom: 15px;
-        color: #764ba2;
-        letter-spacing: 0.5px;
+        font-weight: 700;
+        margin: 0 auto 15px;
     }
     
-    .info-card-list {
-        font-family: 'Montserrat', sans-serif;
-        padding-left: 20px;
-        margin: 0;
-    }
-    
-    .info-card-list li {
-        margin-bottom: 8px;
-        font-weight: 300;
+    /* Loading spinner */
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
     }
     
     /* Footer */
     .footer {
-        font-family: 'Montserrat', sans-serif;
         text-align: center;
-        margin-top: 50px;
         padding: 20px;
-        color: #777;
+        color: #666;
         font-size: 0.9rem;
-        font-weight: 300;
     }
     
-    /* Sidebar animation container */
-    .sidebar-animation {
-        margin: 20px 0;
-        text-align: center;
+    /* Remove light blue from all elements */
+    div[data-testid="stVerticalBlock"] > div[style*="background-color: rgb(173, 216, 230)"] {
+        background-color: white !important;
     }
     
-    .sidebar-animation-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.2rem;
-        margin: 10px 0;
-        color: rgba(255,255,255,0.9);
-        font-weight: 500;
+    div[data-testid="stVerticalBlock"] > div[style*="background-color: rgb(135, 206, 235)"] {
+        background-color: white !important;
     }
     
-    /* Animated divider */
-    .animated-divider {
-        height: 3px;
-        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0));
-        margin: 15px 0;
-        border-radius: 3px;
-        animation: shimmer 2s infinite;
+    div[data-testid="stVerticalBlock"] > div[style*="background-color: rgb(176, 224, 230)"] {
+        background-color: white !important;
     }
     
-    @keyframes shimmer {
-        0% { background-position: -200px 0; }
-        100% { background-position: calc(200px + 100%) 0; }
+    /* Remove light blue borders */
+    div[data-testid="stVerticalBlock"] > div[style*="border-color: rgb(173, 216, 230)"] {
+        border-color: #e2e8f0 !important;
     }
     
-    /* Main content animation containers */
-    .main-animation {
-        display: flex;
-        justify-content: center;
-        margin: 30px 0;
+    /* Remove light blue from Streamlit's default elements */
+    .element-container .stAlert {
+        background-color: white !important;
+        border-left: 5px solid #ff9a9e !important;
     }
     
-    .main-animation-title {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.5rem;
-        margin: 10px 0;
-        color: #667eea;
-        text-align: center;
-        font-weight: 600;
+    /* Remove light blue from metrics */
+    div[data-testid="metric-container"] {
+        background-color: white !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        padding: 15px !important;
     }
     
-    /* Floating animation for cards */
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
+    div[data-testid="metric-container"] > label {
+        color: #666 !important;
     }
     
-    .float-animation {
-        animation: float 3s ease-in-out infinite;
-    }
-    
-    /* Pulse animation for buttons */
-    @keyframes pulse-button {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    
-    .pulse-animation {
-        animation: pulse-button 2s infinite;
+    div[data-testid="metric-container"] > div {
+        color: #333 !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Main container
-st.markdown('<div class="main-container">', unsafe_allow_html=True)
-
-# Header with animation
-st.markdown("""
-<div class="header">
-    <h1>Style AI</h1>
-    <p>Your Personal Fashion Assistant</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Display fashion animation with fallback
-if lottie_fashion:
-    try:
-        st_lottie(lottie_fashion, height=250, key="fashion")
-    except:
-        st.markdown("""
-        <div style="text-align: center; padding: 20px; font-size: 1.2rem; color: #667eea;">
-            <p>✨ Your Personal Fashion Assistant ✨</p>
-        </div>
-        """, unsafe_allow_html=True)
-else:
+# Main app
+def main():
+    # Header
     st.markdown("""
-    <div style="text-align: center; padding: 20px; font-size: 1.2rem; color: #667eea;">
-        <p>✨ Your Personal Fashion Assistant ✨</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Add shopping animation in main content
-st.markdown('<div class="main-animation float-animation">', unsafe_allow_html=True)
-st.markdown('<p class="main-animation-title">Discover Your Style</p>', unsafe_allow_html=True)
-if lottie_shopping:
-    try:
-        st_lottie(lottie_shopping, height=150, key="shopping")
-    except:
-        st.markdown("""
-        <div style="text-align: center; padding: 10px;">
-            <p>🛍️ Discover Your Style 🛍️</p>
-        </div>
-        """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <div style="text-align: center; padding: 10px;">
-        <p>🛍️ Discover Your Style 🛍️</p>
-    </div>
-    """, unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Add closet animation in main content
-st.markdown('<div class="main-animation float-animation" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
-st.markdown('<p class="main-animation-title">Organize Your Wardrobe</p>', unsafe_allow_html=True)
-if lottie_closet:
-    try:
-        st_lottie(lottie_closet, height=150, key="closet")
-    except:
-        st.markdown("""
-        <div style="text-align: center; padding: 10px;">
-            <p>🚪 Organize Your Wardrobe 🚪</p>
-        </div>
-        """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <div style="text-align: center; padding: 10px;">
-        <p>🚪 Organize Your Wardrobe 🚪</p>
-    </div>
-    """, unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Sidebar
-with st.sidebar:
-    st.markdown("""
-    <div class="sidebar-content">
-        <div class="sidebar-header">Customize Your Outfit</div>
+    <div class="header">
+        <h1>Style AI</h1>
+        <p>Your personal fashion stylist powered by AI</p>
     </div>
     """, unsafe_allow_html=True)
     
-    body_shape = st.selectbox("Choose Body Shape", ["apple", "pear", "hourglass", "rectangle", "inverted_triangle"])
-    personal_style = st.selectbox("Choose Personal Style", ["casual", "formal", "bohemian", "sporty", "classic", "trendy"])
-    event_type = st.selectbox("Choose Event Type", ["work", "party", "date", "casual outing", "wedding", "interview"])
-    budget = st.slider("Budget ($)", 20, 500, 150)
-    exclude_colors = st.multiselect("Exclude Colors", ["black", "white", "blue", "red", "green", "yellow", "purple", "pink", "brown", "gray"])
-    
-    # Add animated divider
-    st.markdown('<div class="animated-divider"></div>', unsafe_allow_html=True)
-    
-    # Display fashion show animation with title
-    st.markdown('<div class="sidebar-animation">', unsafe_allow_html=True)
-    st.markdown('<p class="sidebar-animation-title">Fashion Show</p>', unsafe_allow_html=True)
-    if lottie_fashion_show:
-        try:
-            st_lottie(lottie_fashion_show, height=150, key="fashion_show")
-        except:
-            st.markdown("""
-            <div style="text-align: center; padding: 10px;">
-                <p>👗 Fashion Show 👗</p>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
+    # Sidebar
+    with st.sidebar:
         st.markdown("""
-        <div style="text-align: center; padding: 10px;">
-            <p>👗 Fashion Show 👗</p>
+        <div class="sidebar">
+            <h2>Your Preferences</h2>
+            <p>Tell us about yourself to get personalized outfit recommendations</p>
         </div>
         """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Add animated divider
-    st.markdown('<div class="animated-divider"></div>', unsafe_allow_html=True)
-    
-    # Display stylist animation with title
-    st.markdown('<div class="sidebar-animation">', unsafe_allow_html=True)
-    st.markdown('<p class="sidebar-animation-title">Your Stylist</p>', unsafe_allow_html=True)
-    if lottie_stylist:
-        try:
-            st_lottie(lottie_stylist, height=150, key="stylist")
-        except:
-            st.markdown("""
-            <div style="text-align: center; padding: 10px;">
-                <p>👩‍🎨 Your Stylist 👩‍🎨</p>
-            </div>
-            """, unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <div style="text-align: center; padding: 10px;">
-            <p>👩‍🎨 Your Stylist 👩‍🎨</p>
-        </div>
-        """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# Button to get recommendations
-if st.sidebar.button("Get Recommendations", key="get_recommendations"):
-    # Show loading animation
-    loading_container = st.empty()
-    with loading_container.container():
-        if lottie_loading:
-            try:
-                st.markdown("""
-                <div class="loading-container">
-                    <div style="width: 250px; height: 250px;">
-                """, unsafe_allow_html=True)
-                st_lottie(lottie_loading, height=250, key="loading")
-                st.markdown("""
-                    </div>
-                    <p class="loading-text">Finding your perfect outfit...</p>
-                </div>
-                """, unsafe_allow_html=True)
-            except:
-                st.markdown("""
-                <div class="loading-container">
-                    <p class="loading-text">Finding your perfect outfit...</p>
-                    <div style="margin-top: 20px;">
-                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #667eea; animation: pulse 1.5s infinite;"></div>
-                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #764ba2; animation: pulse 1.5s infinite; animation-delay: 0.2s; margin-left: 5px;"></div>
-                        <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #f093fb; animation: pulse 1.5s infinite; animation-delay: 0.4s; margin-left: 5px;"></div>
-                    </div>
-                    <style>
-                        @keyframes pulse {
-                            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-                            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
-                            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-                        }
-                    </style>
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div class="loading-container">
-                <p class="loading-text">Finding your perfect outfit...</p>
-                <div style="margin-top: 20px;">
-                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #667eea; animation: pulse 1.5s infinite;"></div>
-                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #764ba2; animation: pulse 1.5s infinite; animation-delay: 0.2s; margin-left: 5px;"></div>
-                    <div style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: #f093fb; animation: pulse 1.5s infinite; animation-delay: 0.4s; margin-left: 5px;"></div>
-                </div>
-                <style>
-                    @keyframes pulse {
-                        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-                            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
-                            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
-                        }
-                    </style>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Make API request
-    payload = {
-        "body_shape": body_shape,
-        "personal_style": personal_style,
-        "event_type": event_type,
-        "budget": budget,
-        "exclude_colors": exclude_colors
-    }
-    
-    try:
-        response = requests.post(api_url, json=payload, timeout=30)
         
-        # Clear loading animation
-        loading_container.empty()
+        # Form inputs
+        body_shape = st.selectbox(
+            "Body Shape",
+            ["apple", "pear", "hourglass", "rectangle", "inverted_triangle"],
+            index=2
+        )
         
-        if response.status_code == 200:
-            rec = response.json()
+        personal_style = st.selectbox(
+            "Personal Style",
+            ["casual", "formal", "bohemian", "sporty", "classic", "trendy"],
+            index=4
+        )
+        
+        event_type = st.selectbox(
+            "Event Type",
+            ["work", "party", "date", "casual outing", "wedding", "interview"],
+            index=0
+        )
+        
+        budget = st.slider(
+            "Budget ($)",
+            min_value=50,
+            max_value=500,
+            value=200,
+            step=10
+        )
+        
+        exclude_colors = st.multiselect(
+            "Colors to Exclude",
+            ["red", "blue", "green", "yellow", "black", "white", "pink", "purple", "orange", "brown", "gray"]
+        )
+        
+        # Get recommendations button
+        get_recommendations = st.button("Get Recommendations")
+        
+        # Fashion animation in sidebar
+        if lottie_fashion:
+            st_lottie(lottie_fashion, height=200, key="fashion")
+    
+    # Main content
+    if get_recommendations:
+        # Show loading animation
+        with st.spinner("Finding the perfect outfit for you..."):
+            if lottie_loading:
+                st_lottie(lottie_loading, height=200, key="loading")
             
-            # Show success animation
-            success_container = st.empty()
-            if lottie_success:
-                try:
-                    with success_container.container():
-                        st.markdown("""
-                        <div class="success-container">
-                            <div style="width: 200px; height: 200px;">
-                        """, unsafe_allow_html=True)
-                        st_lottie(lottie_success, height=200, key="success")
-                        st.markdown("""
-                            </div>
-                            <p class="success-text">Perfect match found!</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                except:
-                    with success_container.container():
-                        st.markdown("""
-                        <div class="success-container">
-                            <p class="success-text">✨ Perfect match found! ✨</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-            else:
-                with success_container.container():
-                    st.markdown("""
-                    <div class="success-container">
-                        <p class="success-text">✨ Perfect match found! ✨</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-            
-            # Wait a moment to show the success animation
+            # Simulate API call delay
             time.sleep(2)
-            success_container.empty()
             
-            # Display recommendation header
-            st.markdown("""
-            <div class="recommendation-header">
-                <h2 class="recommendation-title">✨ Outfit Recommendation</h2>
-                <div class="compatibility-badge">Compatibility: {:.2f}</div>
-            </div>
-            """.format(rec['overall_compatibility']), unsafe_allow_html=True)
-            
-            # Display message
-            st.markdown("""
-            <div class="message-box">
-                <p class="message-text">{}</p>
-            </div>
-            """.format(rec['message']), unsafe_allow_html=True)
-            
-            # Display outfit items in a grid
-            st.markdown('<div class="outfit-grid">', unsafe_allow_html=True)
-            for idx, item in enumerate(rec["outfit"]):
-                # Add float animation with delay for each card
-                animation_delay = idx * 0.2
-                st.markdown(f"""
-                <div class="outfit-card float-animation" style="animation-delay: {animation_delay}s;">
-                    <div class="outfit-card-header">
-                        <h3 class="outfit-card-title">{item['name']}</h3>
-                    </div>
-                    <div class="outfit-card-body">
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Category:</span>
-                            <span class="outfit-detail-value">{item['category']}</span>
-                        </div>
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Color:</span>
-                            <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {item['color_hex']}"></span>{item['color']}</span>
-                        </div>
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Brand:</span>
-                            <span class="outfit-detail-value">{item['brand']}</span>
-                        </div>
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Price:</span>
-                            <span class="outfit-detail-value">${item['price']}</span>
-                        </div>
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Material:</span>
-                            <span class="outfit-detail-value">{item['material']}</span>
-                        </div>
-                        <div class="outfit-detail">
-                            <span class="outfit-detail-label">Care:</span>
-                            <span class="outfit-detail-value">{item['care_instructions']}</span>
-                        </div>
-                        <div class="outfit-reason">
-                            <strong>Why it works:</strong> {item['reason']}
-                        </div>
-                    </div>
-                    <div class="outfit-score">{item['compatibility_score']:.2f}</div>
-                </div>
-                """, unsafe_allow_html=True)
-            st.markdown('</div>', unsafe_allow_html=True)
-            
-            # Display total price with pulse animation
-            st.markdown("""
-            <div class="total-price-container pulse-animation">
-                <p class="total-price-label">Total Price</p>
-                <p class="total-price-value">${}</p>
-            </div>
-            """.format(rec['total_price']), unsafe_allow_html=True)
-            
-            # Display additional information
-            with st.expander("Style & Event Information", expanded=False):
-                st.markdown("""
-                <div class="info-section">
-                    <h3 class="info-section-header">Style & Event Information</h3>
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h4 class="info-card-title">Body Shape Info</h4>
-                            <ul class="info-card-list">
-                                <li>{}</li>
-                                <li><strong>Tip:</strong> {}</li>
-                            </ul>
-                        </div>
-                        <div class="info-card">
-                            <h4 class="info-card-title">Style Info</h4>
-                            <ul class="info-card-list">
-                                <li>{}</li>
-                                <li><strong>Colors:</strong> {}</li>
-                            </ul>
-                        </div>
-                        <div class="info-card">
-                            <h4 class="info-card-title">Event Info</h4>
-                            <ul class="info-card-list">
-                                <li><strong>Dress code:</strong> {}</li>
-                                <li><strong>Formality:</strong> {}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                """.format(
-                    rec['body_shape_info']['description'],
-                    rec['body_shape_info']['tips'],
-                    rec['style_info']['description'],
-                    rec['style_info']['colors'],
-                    rec['event_info']['dress_code'],
-                    rec['event_info']['formality']
-                ), unsafe_allow_html=True)
-            
-            # Footer - Updated year to 2025
-            st.markdown("""
-            <div class="footer">
-                <p>Style AI © 2025 | Powered by Advanced Fashion AI</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        else:
-            st.error(f"Error fetching recommendations. Status: {response.status_code}. Response: {response.text}")
-    except requests.exceptions.RequestException as e:
-        # Clear loading animation
-        loading_container.empty()
-        
-        # Use mock response (removed blue demo mode notification)
-        rec = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
-        
-        # Show success animation
-        success_container = st.empty()
-        if lottie_success:
+            # Get recommendations (mock or real)
             try:
-                with success_container.container():
-                    st.markdown("""
-                    <div class="success-container">
-                        <div style="width: 200px; height: 200px;">
-                    """, unsafe_allow_html=True)
-                    st_lottie(lottie_success, height=200, key="success")
-                    st.markdown("""
-                        </div>
-                        <p class="success-text">Perfect match found!</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                # Try to get real recommendations from API
+                response = requests.post(
+                    api_url,
+                    json={
+                        "body_shape": body_shape,
+                        "personal_style": personal_style,
+                        "event_type": event_type,
+                        "budget": budget,
+                        "exclude_colors": exclude_colors
+                    }
+                )
+                
+                if response.status_code == 200:
+                    recommendations = response.json()
+                else:
+                    recommendations = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
             except:
-                with success_container.container():
-                    st.markdown("""
-                    <div class="success-container">
-                        <p class="success-text">✨ Perfect match found! ✨</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-        else:
-            with success_container.container():
-                st.markdown("""
-                <div class="success-container">
-                    <p class="success-text">✨ Perfect match found! ✨</p>
-                </div>
-                """, unsafe_allow_html=True)
+                # Fallback to mock response
+                recommendations = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
         
-        # Wait a moment to show the success animation
-        time.sleep(2)
-        success_container.empty()
-        
-        # Display recommendation header
-        st.markdown("""
-        <div class="recommendation-header">
-            <h2 class="recommendation-title">✨ Outfit Recommendation</h2>
-            <div class="compatibility-badge">Compatibility: {:.2f}</div>
-        </div>
-        """.format(rec['overall_compatibility']), unsafe_allow_html=True)
+        # Display success animation
+        if lottie_success:
+            st_lottie(lottie_success, height=150, key="success")
         
         # Display message
-        st.markdown("""
+        st.markdown(f"""
         <div class="message-box">
-            <p class="message-text">{}</p>
-        </div>
-        """.format(rec['message']), unsafe_allow_html=True)
-        
-        # Display outfit items in a grid
-        st.markdown('<div class="outfit-grid">', unsafe_allow_html=True)
-        for idx, item in enumerate(rec["outfit"]):
-            # Add float animation with delay for each card
-            animation_delay = idx * 0.2
-            st.markdown(f"""
-            <div class="outfit-card float-animation" style="animation-delay: {animation_delay}s;">
-                <div class="outfit-card-header">
-                    <h3 class="outfit-card-title">{item['name']}</h3>
-                </div>
-                <div class="outfit-card-body">
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Category:</span>
-                        <span class="outfit-detail-value">{item['category']}</span>
-                    </div>
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Color:</span>
-                        <span class="outfit-detail-value"><span class="color-indicator" style="background-color: {item['color_hex']}"></span>{item['color']}</span>
-                    </div>
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Brand:</span>
-                        <span class="outfit-detail-value">{item['brand']}</span>
-                    </div>
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Price:</span>
-                        <span class="outfit-detail-value">${item['price']}</span>
-                    </div>
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Material:</span>
-                        <span class="outfit-detail-value">{item['material']}</span>
-                    </div>
-                    <div class="outfit-detail">
-                        <span class="outfit-detail-label">Care:</span>
-                        <span class="outfit-detail-value">{item['care_instructions']}</span>
-                    </div>
-                    <div class="outfit-reason">
-                        <strong>Why it works:</strong> {item['reason']}
-                    </div>
-                </div>
-                <div class="outfit-score">{item['compatibility_score']:.2f}</div>
-            </div>
-            """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Display total price with pulse animation
-        st.markdown("""
-        <div class="total-price-container pulse-animation">
-            <p class="total-price-label">Total Price</p>
-            <p class="total-price-value">${}</p>
-        </div>
-        """.format(rec['total_price']), unsafe_allow_html=True)
-        
-        # Display additional information
-        with st.expander("Style & Event Information", expanded=False):
-            st.markdown("""
-            <div class="info-section">
-                <h3 class="info-section-header">Style & Event Information</h3>
-                <div class="info-grid">
-                    <div class="info-card">
-                        <h4 class="info-card-title">Body Shape Info</h4>
-                        <ul class="info-card-list">
-                            <li>{}</li>
-                            <li><strong>Tip:</strong> {}</li>
-                        </ul>
-                    </div>
-                    <div class="info-card">
-                        <h4 class="info-card-title">Style Info</h4>
-                        <ul class="info-card-list">
-                            <li>{}</li>
-                            <li><strong>Colors:</strong> {}</li>
-                        </ul>
-                    </div>
-                    <div class="info-card">
-                        <h4 class="info-card-title">Event Info</h4>
-                        <ul class="info-card-list">
-                            <li><strong>Dress code:</strong> {}</li>
-                            <li><strong>Formality:</strong> {}</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            """.format(
-                rec['body_shape_info']['description'],
-                rec['body_shape_info']['tips'],
-                rec['style_info']['description'],
-                rec['style_info']['colors'],
-                rec['event_info']['dress_code'],
-                rec['event_info']['formality']
-            ), unsafe_allow_html=True)
-        
-        # Footer - Updated year to 2025
-        st.markdown("""
-        <div class="footer">
-            <p>Style AI © 2025 | Powered by Advanced Fashion AI</p>
+            <h3>Recommendation</h3>
+            <p>{recommendations['message']}</p>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Display compatibility score
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.markdown(f"""
+            <div class="compatibility-score">
+                {int(recommendations['overall_compatibility'] * 100)}%
+            </div>
+            <p style="text-align:center;">Compatibility</p>
+            """, unsafe_allow_html=True)
+        
+        # Display outfit recommendations
+        st.markdown("<h2>Recommended Outfit</h2>", unsafe_allow_html=True)
+        
+        for item in recommendations['outfit']:
+            col1, col2 = st.columns([1, 3])
+            
+            with col1:
+                # Placeholder for item image
+                st.image(f"https://via.placeholder.com/150x150?text={item['category'].capitalize()}", width=150)
+            
+            with col2:
+                st.markdown(f"""
+                <div class="recommendation-card">
+                    <h3>{item['name']}</h3>
+                    <p><strong>Brand:</strong> {item['brand']} | <strong>Price:</strong> ${item['price']}</p>
+                    <p><strong>Color:</strong> <span style="display:inline-block;width:20px;height:20px;background-color:{item['color_hex']};border-radius:50%;vertical-align:middle;"></span> {item['color'].capitalize()}</p>
+                    <p><strong>Material:</strong> {item['material']}</p>
+                    <p><strong>Care:</strong> {item['care_instructions']}</p>
+                    <p><strong>Why it works:</strong> {item['reason']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Display total price
+        st.markdown(f"""
+        <div class="price-container">
+            <h3>Total Outfit Price</h3>
+            <div class="price">${recommendations['total_price']}</div>
+            <p>Within your ${budget} budget</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Display additional information
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown(f"""
+            <div class="info-box">
+                <h3>Body Shape: {body_shape.capitalize()}</h3>
+                <p>{recommendations['body_shape_info']['description']}</p>
+                <p><strong>Tip:</strong> {recommendations['body_shape_info']['tips']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(f"""
+            <div class="info-box">
+                <h3>Style: {personal_style.capitalize()}</h3>
+                <p>{recommendations['style_info']['description']}</p>
+                <p><strong>Colors:</strong> {recommendations['style_info']['colors']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown(f"""
+            <div class="info-box">
+                <h3>Event: {event_type.capitalize()}</h3>
+                <p><strong>Dress Code:</strong> {recommendations['event_info']['dress_code']}</p>
+                <p><strong>Formality:</strong> {recommendations['event_info']['formality'].replace('_', ' ').capitalize()}</p>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Footer
+    st.markdown("""
+    <div class="footer">
+        <p>© 2023 Style AI | Your Personal Fashion Assistant</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Close main container
-st.markdown('</div>', unsafe_allow_html=True)
+# Import streamlit-lottie
+try:
+    from streamlit_lottie import st_lottie
+except ImportError:
+    st_lottie = None
+
+# Run the app
+if __name__ == "__main__":
+    main()
