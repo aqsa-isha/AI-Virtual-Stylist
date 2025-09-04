@@ -12,69 +12,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Load Lottie animation safely with requests
-def load_lottieurl(url: str):
-    try:
-        r = requests.get(url)
-        if r.status_code == 200:
-            return r.json()
-        else:
-            return None
-    except Exception as e:
-        st.error(f"Error loading Lottie: {e}")
-        return None
-
-# Try to load animations, with fallbacks
-try:
-    lottie_fashion = load_lottieurl("https://assets9.lottiefiles.com/packages/lf20_V9t630.json")
-    if lottie_fashion is None:
-        lottie_fashion = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json")
-except:
-    lottie_fashion = None
-
-try:
-    lottie_loading = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_DMgKk2.json")
-    if lottie_loading is None:
-        lottie_loading = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_x62chj.json")
-except:
-    lottie_loading = None
-
-try:
-    lottie_success = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_l5z0rj.json")
-    if lottie_success is None:
-        lottie_success = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_gciiixj2.json")
-except:
-    lottie_success = None
-
-try:
-    lottie_stylist = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_touohxv0.json")
-    if lottie_stylist is None:
-        lottie_stylist = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_1pxqjqps.json")
-except:
-    lottie_stylist = None
-
-# Additional animations for sidebar and main content
-try:
-    lottie_fashion_show = load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_1a1lwb.json")
-    if lottie_fashion_show is None:
-        lottie_fashion_show = load_lottieurl("https://assets8.lottiefiles.com/packages/lf20_5k2j2v.json")
-except:
-    lottie_fashion_show = None
-
-try:
-    lottie_shopping = load_lottieurl("https://assets2.lottiefiles.com/packages/lf20_3rkla.json")
-    if lottie_shopping is None:
-        lottie_shopping = load_lottieurl("https://assets1.lottiefiles.com/packages/lf20_j2z4wq.json")
-except:
-    lottie_shopping = None
-
-try:
-    lottie_closet = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_6mhwlk.json")
-    if lottie_closet is None:
-        lottie_closet = load_lottieurl("https://assets5.lottiefiles.com/packages/lf20_1jzlf.json")
-except:
-    lottie_closet = None
-
 # API URL (will be replaced by ngrok URL)
 api_url = os.getenv("BACKEND_URL", "http://localhost:8000/recommend")
 
@@ -525,18 +462,11 @@ def main():
         
         # Get recommendations button
         get_recommendations = st.button("Get Recommendations")
-        
-        # Fashion animation in sidebar
-        if lottie_fashion:
-            st_lottie(lottie_fashion, height=200, key="fashion")
     
     # Main content
     if get_recommendations:
-        # Show loading animation
+        # Show loading spinner
         with st.spinner("Finding the perfect outfit for you..."):
-            if lottie_loading:
-                st_lottie(lottie_loading, height=200, key="loading")
-            
             # Simulate API call delay
             time.sleep(2)
             
@@ -562,10 +492,6 @@ def main():
                 # Fallback to mock response
                 recommendations = get_mock_response(body_shape, personal_style, event_type, budget, exclude_colors)
         
-        # Display success animation
-        if lottie_success:
-            st_lottie(lottie_success, height=150, key="success")
-        
         # Display message
         st.markdown(f"""
         <div class="message-box">
@@ -588,23 +514,16 @@ def main():
         st.markdown("<h2>Recommended Outfit</h2>", unsafe_allow_html=True)
         
         for item in recommendations['outfit']:
-            col1, col2 = st.columns([1, 3])
-            
-            with col1:
-                # Placeholder for item image
-                st.image(f"https://via.placeholder.com/150x150?text={item['category'].capitalize()}", width=150)
-            
-            with col2:
-                st.markdown(f"""
-                <div class="recommendation-card">
-                    <h3>{item['name']}</h3>
-                    <p><strong>Brand:</strong> {item['brand']} | <strong>Price:</strong> ${item['price']}</p>
-                    <p><strong>Color:</strong> <span style="display:inline-block;width:20px;height:20px;background-color:{item['color_hex']};border-radius:50%;vertical-align:middle;"></span> {item['color'].capitalize()}</p>
-                    <p><strong>Material:</strong> {item['material']}</p>
-                    <p><strong>Care:</strong> {item['care_instructions']}</p>
-                    <p><strong>Why it works:</strong> {item['reason']}</p>
-                </div>
-                """, unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="recommendation-card">
+                <h3>{item['name']}</h3>
+                <p><strong>Brand:</strong> {item['brand']} | <strong>Price:</strong> ${item['price']}</p>
+                <p><strong>Color:</strong> <span style="display:inline-block;width:20px;height:20px;background-color:{item['color_hex']};border-radius:50%;vertical-align:middle;"></span> {item['color'].capitalize()}</p>
+                <p><strong>Material:</strong> {item['material']}</p>
+                <p><strong>Care:</strong> {item['care_instructions']}</p>
+                <p><strong>Why it works:</strong> {item['reason']}</p>
+            </div>
+            """, unsafe_allow_html=True)
         
         # Display total price
         st.markdown(f"""
@@ -651,12 +570,6 @@ def main():
         <p>© 2023 Style AI | Your Personal Fashion Assistant</p>
     </div>
     """, unsafe_allow_html=True)
-
-# Import streamlit-lottie
-try:
-    from streamlit_lottie import st_lottie
-except ImportError:
-    st_lottie = None
 
 # Run the app
 if __name__ == "__main__":
