@@ -171,7 +171,7 @@ def get_mock_response(body_shape, personal_style, event_type, budget, exclude_co
         "total_price": total_price
     }
 
-# Custom CSS for stunning UI with no light blue elements
+# Custom CSS for stunning UI with animations
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Parisienne&family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -202,6 +202,7 @@ st.markdown("""
         background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
         min-height: 100vh;
         padding: 20px;
+        animation: fadeIn 1s ease-in-out;
     }
     
     /* Header */
@@ -214,6 +215,7 @@ st.markdown("""
         box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         position: relative;
         overflow: hidden;
+        animation: slideDown 0.8s ease-out;
     }
     
     .header::before {
@@ -225,6 +227,7 @@ st.markdown("""
         height: 200%;
         background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
         z-index: 0;
+        animation: shimmer 3s infinite;
     }
     
     .header h1, .header p {
@@ -238,6 +241,7 @@ st.markdown("""
         border-radius: 20px;
         padding: 20px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        animation: slideInLeft 0.8s ease-out;
     }
     
     /* Form elements */
@@ -245,12 +249,24 @@ st.markdown("""
         border-radius: 10px;
         border: 1px solid #e2e8f0;
         padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .stTextInput > div > div > input:focus {
+        border-color: #ff9a9e;
+        box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.2);
     }
     
     .stSelectbox > div > div > select {
         border-radius: 10px;
         border: 1px solid #e2e8f0;
         padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .stSelectbox > div > div > select:focus {
+        border-color: #ff9a9e;
+        box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.2);
     }
     
     .stSlider > div > div > div > div {
@@ -267,11 +283,35 @@ st.markdown("""
         font-weight: 600;
         width: 100%;
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+    }
+    
+    .stButton > button:active {
+        transform: translateY(1px);
+    }
+    
+    .stButton > button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+    
+    .stButton > button:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
     }
     
     /* Recommendation cards */
@@ -283,6 +323,20 @@ st.markdown("""
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
         border: 1px solid #f0f0f0;
+        animation: fadeInUp 0.6s ease-out;
+        animation-fill-mode: both;
+    }
+    
+    .recommendation-card:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+    
+    .recommendation-card:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+    
+    .recommendation-card:nth-child(3) {
+        animation-delay: 0.6s;
     }
     
     .recommendation-card:hover {
@@ -290,7 +344,7 @@ st.markdown("""
         box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
     
-    /* Message box - removed light blue background */
+    /* Message box */
     .message-box {
         background: white;
         border-radius: 15px;
@@ -298,9 +352,10 @@ st.markdown("""
         margin-bottom: 20px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         border-left: 5px solid #ff9a9e;
+        animation: fadeIn 1s ease-out;
     }
     
-    /* Total price container - removed light blue background */
+    /* Total price container */
     .price-container {
         background: white;
         border-radius: 15px;
@@ -308,6 +363,7 @@ st.markdown("""
         margin-top: 20px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         text-align: center;
+        animation: fadeIn 1.2s ease-out;
     }
     
     .price-container h3 {
@@ -319,6 +375,7 @@ st.markdown("""
         font-size: 2rem;
         font-weight: 700;
         color: #ff9a9e;
+        animation: pulse 2s infinite;
     }
     
     /* Info boxes */
@@ -328,6 +385,20 @@ st.markdown("""
         padding: 20px;
         margin-bottom: 20px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        animation: fadeInUp 0.8s ease-out;
+        animation-fill-mode: both;
+    }
+    
+    .info-box:nth-child(1) {
+        animation-delay: 0.3s;
+    }
+    
+    .info-box:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+    
+    .info-box:nth-child(3) {
+        animation-delay: 0.7s;
     }
     
     .info-box h3 {
@@ -349,6 +420,7 @@ st.markdown("""
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 auto 15px;
+        animation: scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     /* Loading spinner */
@@ -365,6 +437,7 @@ st.markdown("""
         padding: 20px;
         color: #666;
         font-size: 0.9rem;
+        animation: fadeIn 1.5s ease-out;
     }
     
     /* Remove light blue from all elements */
@@ -406,7 +479,167 @@ st.markdown("""
     div[data-testid="metric-container"] > div {
         color: #333 !important;
     }
+    
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes shimmer {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(20, 20);
+            opacity: 0;
+        }
+    }
+    
+    /* Animated background elements */
+    .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    
+    .animated-bg span {
+        position: absolute;
+        display: block;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 154, 158, 0.1);
+        animation: move 25s linear infinite;
+        bottom: -150px;
+        border-radius: 50%;
+    }
+    
+    .animated-bg span:nth-child(1) {
+        left: 25%;
+        width: 80px;
+        height: 80px;
+        animation-delay: 0s;
+    }
+    
+    .animated-bg span:nth-child(2) {
+        left: 10%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 2s;
+        animation-duration: 12s;
+    }
+    
+    .animated-bg span:nth-child(3) {
+        left: 70%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 4s;
+    }
+    
+    .animated-bg span:nth-child(4) {
+        left: 40%;
+        width: 60px;
+        height: 60px;
+        animation-delay: 0s;
+        animation-duration: 18s;
+    }
+    
+    .animated-bg span:nth-child(5) {
+        left: 65%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 0s;
+    }
+    
+    .animated-bg span:nth-child(6) {
+        left: 75%;
+        width: 110px;
+        height: 110px;
+        animation-delay: 3s;
+    }
+    
+    @keyframes move {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+            border-radius: 50%;
+        }
+        100% {
+            transform: translateY(-1000px) rotate(720deg);
+            opacity: 0;
+            border-radius: 50%;
+        }
+    }
 </style>
+
+<div class="animated-bg">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 """, unsafe_allow_html=True)
 
 # Main app
@@ -567,7 +800,7 @@ def main():
     # Footer
     st.markdown("""
     <div class="footer">
-        <p>© 2023 Style AI | Your Personal Fashion Assistant</p>
+        <p>© 2025 Style AI | Your Personal Fashion Assistant</p>
     </div>
     """, unsafe_allow_html=True)
 
